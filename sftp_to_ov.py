@@ -3,6 +3,7 @@ import argparse
 import pysftp
 import re
 import time
+import paramiko
 
 Description="""Import files from SFTP to OV in order
 """
@@ -33,8 +34,7 @@ if len(PDError) > 3:
 	quit()
 
 website = parameters[args.website]
-Message(website)
-#quit()
+#Message(website)
 
 ###### sort a list file names based on imbedded timestamp
 def sortalist(listOfFileName):
@@ -99,11 +99,22 @@ def runAndWaitForImport(filename, impspec, action):
 
 #####  Main section
 
+class MyCnOpts:
+	pass
+
 # connect to SFTP
 try:
+	#not best practice, but avoids needing entry in .ssh/known_hosts
+	#from Joe Cool near end of https://bitbucket.org/dundeemt/pysftp/issues/109/hostkeysexception-no-host-keys-found-even
+	cnopts = MyCnOpts()
+	cnopts.log = False
+	cnopts.compression = False
+	cnopts.ciphers = None
+	cnopts.hostkeys = None
 	sftp = pysftp.Connection(parameters['SFTP']['url'],
 		username=parameters['SFTP']['UserName'],
-		password=parameters['SFTP']['Password']
+		password=parameters['SFTP']['Password'],
+		cnopts = cnopts
 		)
 except:
 	Trace['SFTP Connect'] = sys.exc_info()[0]
@@ -123,10 +134,10 @@ with sftp.cd(parameters['SFTP']['Directory']):
 # The order is based on parent child relationship in tree ensuring parents created first.
 for imp in parameters["IMPORT_ORDER"]:
 
-	Message(parameters["IMPORTS"][imp])
+	#Message(parameters["IMPORTS"][imp])
 	r = re.compile(parameters["IMPORTS"][imp]["prefix"])
 	filteredFiles = sortalist(list(filter(r.match,files)))
-	Message(filteredFiles)
+	#Message(filteredFiles)
 	if filteredFiles is None:
 		continue
 
