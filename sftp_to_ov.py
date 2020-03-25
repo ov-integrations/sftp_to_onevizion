@@ -4,6 +4,7 @@ import pysftp
 import re
 import time
 import paramiko
+from datetime import datetime
 
 Description="""Import files from SFTP to OV in order
 """
@@ -37,24 +38,20 @@ website = parameters[args.website]
 #Message(website)
 
 ###### sort a list file names based on imbedded timestamp
-def sortalist(listOfFileName):
+def sortalist(listOfFileName,params):
 	if len(listOfFileName) == 0:
 		return None
 
-	newList1 = []
-	r = re.compile('e2ovsync_[0-9]*')
-	for i in listOfFileName:
-		newList1.append(r.search(i).group(0))
+	def return_date_from_filename(f):
+		p = re.compile(params['dateprefix'])
+		r = p.search(f)
+		return datetime.strptime(r.group(0).replace(params['datecruft'],''), params['datefmt'])
 
-	newList2 = []
-	newList1 = sorted(newList1)
+	if params['datefmt'] is None:
+		return listOfFileName
+	else:
+		return sorted(listOfFileName,key=return_date_from_filename)
 
-	for i in newList1:
-		for j in listOfFileName:
-			if i in j:
-				newList2.append(j)
-
-	return newList2
 
 
 ###### Run an import and wait for it to complete
@@ -136,7 +133,7 @@ for imp in parameters["IMPORT_ORDER"]:
 
 	#Message(parameters["IMPORTS"][imp])
 	r = re.compile(parameters["IMPORTS"][imp]["prefix"])
-	filteredFiles = sortalist(list(filter(r.match,files)))
+	filteredFiles = sortalist(list(filter(r.match,files)),parameters["IMPORTS"][imp])
 	#Message(filteredFiles)
 	if filteredFiles is None:
 		continue

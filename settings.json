@@ -26,36 +26,54 @@
 	"IMPORTS": {
 		"ring" : {
 			"prefix" : "ring_[0-9]*_e2ovsync_202.*",
+			"dateprefix" : "e2ovsync_[0-9]{12}",
+			"datecruft" : "e2ovsync_",
+			"datefmt" : "%Y%m%d",
 			"impspec" : 100006284,
 			"impname" : "Ring Default Data Import",
 			"action" : "INSERT_UPDATE"
 		}
 		,"site" : {
 			"prefix" : "site_[0-9]*_e2ovsync_202.*",
+			"dateprefix" : "e2ovsync_[0-9]{12}",
+			"datecruft" : "e2ovsync_",
+			"datefmt" : "%Y%m%d",
 			"impspec" : 100006285,
 			"impname" : "Site Default Data Import",
 			"action" : "INSERT_UPDATE"
 		},
 		"project" : {
 			"prefix" : "project_[0-9]*_e2ovsync_202.*",
+			"dateprefix" : "e2ovsync_[0-9]{12}",
+			"datecruft" : "e2ovsync_",
+			"datefmt" : "%Y%m%d",
 			"impspec" : 100006286,
 			"impname" : "Project Default Data Import",
 			"action" : "INSERT_UPDATE"
 		},
 		"project_tasks_projected" : {
 			"prefix" : "project_tasks_planned_[0-9]*_e2ovsync_202.*",
+			"dateprefix" : "e2ovsync_[0-9]{12}",
+			"datecruft" : "e2ovsync_",
+			"datefmt" : "%Y%m%d",
 			"impspec" : 100006304,
 			"impname" : "Assign task Dates to Project Workplan",
 			"action" : "UPDATE"
 		},
 		"project_tasks_actual" : {
 			"prefix" : "project_tasks_actual_[0-9]*_e2ovsync_202.*",
+			"dateprefix" : "e2ovsync_[0-9]{12}",
+			"datecruft" : "e2ovsync_",
+			"datefmt" : "%Y%m%d",
 			"impspec" : 100006304,
 			"impname" : "Assign task Dates to Project Workplan",
 			"action" : "UPDATE"
 		},
 		"project_tasks_na" : {
 			"prefix" : "project_tasks_na_[0-9]*_e2ovsync_202.*",
+			"dateprefix" : "e2ovsync_[0-9]{12}",
+			"datecruft" : "e2ovsync_",
+			"datefmt" : "%Y%m%d",
 			"impspec" : 100006304,
 			"impname" : "Assign task Dates to Project Workplan",
 			"action" : "UPDATE"
