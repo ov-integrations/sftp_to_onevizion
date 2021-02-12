@@ -15,7 +15,7 @@ Description="""Import files from SFTP to OV in order
 """
 
 # Read settings
-with open('settings','r') as p:
+with open('settings.json','r') as p:
 	params = json.loads(p.read())
 try:
 	OvUserName = params['OV']['UserName']
