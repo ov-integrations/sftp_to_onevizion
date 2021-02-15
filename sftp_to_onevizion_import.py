@@ -182,7 +182,7 @@ for row in Req.jsonData:
 
 		if row['SOI_MAX_RUNTIME_IN_MINUTES'] is None:
 			maxRunTimeInMinutes = 10
-		else
+		else:
 			maxRunTimeInMinutes = int(row['SOI_MAX_RUNTIME_IN_MINUTES'])
 
 		if runAndWaitForImport(f,row['SOI_IMPORT_ID'],row['SOI_ACTION'],maxRunTimeInMinutes):
