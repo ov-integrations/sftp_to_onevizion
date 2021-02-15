@@ -53,8 +53,9 @@ def sortalist(listOfFileName,dateprefix,datecruft,datefmt):
 
 
 ###### Run an import and wait for it to complete
-def runAndWaitForImport(filename, impspec, action):
+def runAndWaitForImport(filename, impspec, action, maxRunTimeInMinutes):
 	tries = 0
+	maxTries = maxRunTimeInMinutes * 60 / 5
 
 	imp = onevizion.Import(
 		userName = OvUserName,
@@ -81,8 +82,9 @@ def runAndWaitForImport(filename, impspec, action):
 			d = False
 
 		tries = tries + 1
-		if tries>100:
+		if tries>maxTries:
 			#todo more error handling
+			Message('ERROR: Import took too long')
 			return False
 
 	if process_data["status"] in ['EXECUTED','EXECUTED_WITHOUT_WARNINGS','EXECUTED_WITH_WARNINGS']:
@@ -99,7 +101,7 @@ Req.read(filters = {'SOI_ENABLED':'1'},
 					'SOI_SFTP_FOLDER', 'SOI_FILE_MASK', 'SOI_IMPORT_NAME', 'SOI_ACTION', 'SOI_IMPORT_ID',
 					'SOI_SFTP_ARCHIVE_FOLDER', 'SOI_DAYS_TO_KEEP_IN_ARCHIVE',
 					'SOI_DATE_PORTION_OF_FILE_NAME', 'SOI_DATE_CRUFT_TO_REMOVE', 'SOI_DATE_FORMAT',
-					'SOI_PREPROCESSOR_SCRIPT','SOI_EXTRA_SFTP_COMMAND','SOI_PREPROCESSOR_COMMAND'], 
+					'SOI_PREPROCESSOR_SCRIPT','SOI_EXTRA_SFTP_COMMAND','SOI_PREPROCESSOR_COMMAND','SOI_MAX_RUNTIME_IN_MINUTES'], 
 		sort = {'SOI_ORDER_TO_PROCESS':'ASC'}, page = 1, perPage = 1000)
 
 if len(Req.errors)>0:
@@ -178,7 +180,7 @@ for row in Req.jsonData:
 			Message(cp)
 			#TODO Add Error Handling
 
-		if runAndWaitForImport(f,row['SOI_IMPORT_ID'],row['SOI_ACTION']):
+		if runAndWaitForImport(f,row['SOI_IMPORT_ID'],row['SOI_ACTION'],row['SOI_MAX_RUNTIME_IN_MINUTES']):
 			if row['SOI_EXTRA_SFTP_COMMAND'] is not None:
 				extracmd = "sftp."+row['SOI_EXTRA_SFTP_COMMAND'].replace('{filename}',f)
 				print(extracmd)
