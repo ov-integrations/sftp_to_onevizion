@@ -180,11 +180,11 @@ for row in Req.jsonData:
 			Message(cp)
 			#TODO Add Error Handling
 
-		if row['SOI_MAX_RUNTIME_IN_MINUTES'] is None then
+		if row['SOI_MAX_RUNTIME_IN_MINUTES'] is None:
 			maxRunTimeInMinutes = 10
 		else
 			maxRunTimeInMinutes = int(row['SOI_MAX_RUNTIME_IN_MINUTES'])
-		
+
 		if runAndWaitForImport(f,row['SOI_IMPORT_ID'],row['SOI_ACTION'],maxRunTimeInMinutes):
 			if row['SOI_EXTRA_SFTP_COMMAND'] is not None:
 				extracmd = "sftp."+row['SOI_EXTRA_SFTP_COMMAND'].replace('{filename}',f)
