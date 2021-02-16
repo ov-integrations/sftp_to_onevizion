@@ -55,8 +55,10 @@ def sortalist(listOfFileName,dateprefix,datecruft,datefmt):
 ###### Run an import and wait for it to complete
 def runAndWaitForImport(filename, impspec, action, maxRunTimeInMinutes):
 	tries = 0
-	maxTries = maxRunTimeInMinutes * 60 / 5
+	maxTries = maxRunTimeInMinutes * 60 / 10
 
+	Message(filename+' x '+impspec+' x '+action)
+	Message('Kilroy was not here')
 	imp = onevizion.Import(
 		userName = OvUserName,
 		password = OvPassword,
@@ -68,15 +70,23 @@ def runAndWaitForImport(filename, impspec, action, maxRunTimeInMinutes):
 		)
 
 	if len(imp.errors)>0:
+		Message(imp.errors)
+		Message('ERROR: Could not run import')
 		return False
 
 	PID = imp.processId
+	Message(PID)
 
 	d = True
 	while d:
-		time.sleep(5)
+		time.sleep(10)
+		Message('Checking status '+str(tries)+' tries '+str(tries/6)+' minutes')
 		process_data = imp.getProcessData(processId=PID)
-		#Message(process_data.jsonData)
+
+		if len(imp.errors)>0:
+			Message(imp.errors)
+			Message("ERROR: Could not get Process Data")
+		#Message(process_data)
 
 		if process_data["status"] in ['EXECUTED','EXECUTED_WITHOUT_WARNINGS','EXECUTED_WITH_WARNINGS']:
 			d = False
