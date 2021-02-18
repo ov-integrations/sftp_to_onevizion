@@ -204,7 +204,7 @@ for row in Req.jsonData:
 				sftp.remove(row['SOI_SFTP_FOLDER']+f)
 			else:
 				try:
-					sftp.remove(ow['SOI_SFTP_ARCHIVE_FOLDER']+f)
+					sftp.remove(row['SOI_SFTP_ARCHIVE_FOLDER']+f)
 				except:
 					None
 				sftp.rename(row['SOI_SFTP_FOLDER']+f,row['SOI_SFTP_ARCHIVE_FOLDER']+f)
