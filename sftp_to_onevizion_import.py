@@ -203,6 +203,10 @@ for row in Req.jsonData:
 			elif row['SOI_SFTP_ARCHIVE_FOLDER'] is None or row['SOI_SFTP_ARCHIVE_FOLDER'] == '':
 				sftp.remove(row['SOI_SFTP_FOLDER']+f)
 			else:
+				try:
+					sftp.remove(ow['SOI_SFTP_ARCHIVE_FOLDER']+f)
+				except:
+					None
 				sftp.rename(row['SOI_SFTP_FOLDER']+f,row['SOI_SFTP_ARCHIVE_FOLDER']+f)
 				Message("successfully imported {filename}".format(filename=f))
 			try:
