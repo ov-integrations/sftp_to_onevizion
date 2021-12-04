@@ -86,7 +86,7 @@ def runAndWaitForImport(filename, impspec, action, maxRunTimeInMinutes):
 		if len(imp.errors)>0:
 			Message(imp.errors)
 			Message("ERROR: Could not get Process Data")
-		#Message(process_data)
+			continue
 
 		if process_data["status"] in ['EXECUTED','EXECUTED_WITHOUT_WARNINGS','EXECUTED_WITH_WARNINGS']:
 			d = False
