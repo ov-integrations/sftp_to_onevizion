@@ -81,6 +81,17 @@ def runAndWaitForImport(filename, impspec, action, maxRunTimeInMinutes):
 	while d:
 		time.sleep(10)
 		Message('Checking status '+str(tries)+' tries '+str(tries/6)+' minutes')
+
+		# without impSpecId and file it will not attempt to run an import on object creation
+		imp = onevizion.Import(
+			userName = OvUserName,
+			password = OvPassword,
+			URL = OvUrl,
+			impSpecId=None,
+			file=None,
+			action=None,
+			comments=None
+			)
 		process_data = imp.getProcessData(processId=PID)
 
 		if len(imp.errors)>0:
