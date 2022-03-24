@@ -219,6 +219,7 @@ for row in Req.jsonData:
 					Message('Could not delete the file')
 			else:
 				try:
+					Message('Renaming '+row['SOI_SFTP_FOLDER']+f+' to '+row['SOI_SFTP_ARCHIVE_FOLDER']+f)
 					sftp.rename(row['SOI_SFTP_FOLDER']+f,row['SOI_SFTP_ARCHIVE_FOLDER']+f)
 				except:
 					Message('Could not rename the file')
