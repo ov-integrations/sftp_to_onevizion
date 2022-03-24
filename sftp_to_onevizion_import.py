@@ -222,7 +222,11 @@ for row in Req.jsonData:
 					Message('Renaming '+row['SOI_SFTP_FOLDER']+f+' to '+row['SOI_SFTP_ARCHIVE_FOLDER']+f)
 					sftp.rename(row['SOI_SFTP_FOLDER']+f,row['SOI_SFTP_ARCHIVE_FOLDER']+f)
 				except:
-					Message('Could not rename the file')
+					Message('Could not rename the file ' + sys.exc_info()[0])
+					try:
+						sftp.remove(row['SOI_SFTP_ARCHIVE_FOLDER']+f)
+					except:
+						Message('Could not delete the file')
 			Message("successfully imported {filename}".format(filename=f))
 			try:
 				os.remove(f)
