@@ -188,12 +188,11 @@ for row in Req.jsonData:
 			pp.write(decodedbinary)
 
 	for f in filteredFiles:
-		Message(row['SOI_SFTP_FOLDER']+f)
+		Message(f)
 		try:
 			sftp.get(row['SOI_SFTP_FOLDER']+f, preserve_mtime=True)
 		except:
-			print(sys.exc_info()[0])
-			Message('Could not retrieve file')
+			Message(sys.exc_info)
 			quit(1) # process files on next fun.  Error on getting file usually because file is still being written to.
 
 		if row['SOI_PREPROCESSOR_COMMAND'] is not None:
@@ -213,21 +212,14 @@ for row in Req.jsonData:
 				print(extracmd)
 				exec(extracmd)
 			elif row['SOI_SFTP_ARCHIVE_FOLDER'] is None or row['SOI_SFTP_ARCHIVE_FOLDER'] == '':
+				sftp.remove(row['SOI_SFTP_FOLDER']+f)
+			else:
 				try:
 					sftp.remove(row['SOI_SFTP_ARCHIVE_FOLDER']+f)
 				except:
-					Message('Could not delete the file')
-			else:
-				try:
-					Message('Renaming '+row['SOI_SFTP_FOLDER']+f+' to '+row['SOI_SFTP_ARCHIVE_FOLDER']+f)
-					sftp.rename(row['SOI_SFTP_FOLDER']+f,row['SOI_SFTP_ARCHIVE_FOLDER']+f)
-				except:
-					Message('Could not rename the file ' + sys.exc_info()[0])
-					try:
-						sftp.remove(row['SOI_SFTP_ARCHIVE_FOLDER']+f)
-					except:
-						Message('Could not delete the file')
-			Message("successfully imported {filename}".format(filename=f))
+					None
+				sftp.rename(row['SOI_SFTP_FOLDER']+f,row['SOI_SFTP_ARCHIVE_FOLDER']+f)
+				Message("successfully imported {filename}".format(filename=f))
 			try:
 				os.remove(f)
 			except:
@@ -237,7 +229,6 @@ for row in Req.jsonData:
 				os.remove(f)
 			except:
 				None
-			Message('could not run import')
 			quit(1)
 
 	if row['SOI_PREPROCESSOR_SCRIPT']['file_name'] is not None:
