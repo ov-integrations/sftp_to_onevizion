@@ -59,7 +59,7 @@ def runAndWaitForImport(filename, impspec, action, maxRunTimeInMinutes):
 
 	Message(filename+' x '+impspec+' x '+action)
 	Message('Kilroy was not here')
-	imp = onevizion.Import(
+	impRun = onevizion.Import(
 		userName = OvUserName,
 		password = OvPassword,
 		URL = OvUrl,
@@ -69,12 +69,12 @@ def runAndWaitForImport(filename, impspec, action, maxRunTimeInMinutes):
 		comments=filename
 		)
 
-	if len(imp.errors)>0:
-		Message(imp.errors)
+	if len(impRun.errors)>0:
+		Message(impRun.errors)
 		Message('ERROR: Could not run import')
 		return False
 
-	PID = imp.processId
+	PID = impRun.processId
 	Message(PID)
 
 	d = True
@@ -207,6 +207,8 @@ for row in Req.jsonData:
 			maxRunTimeInMinutes = int(row['SOI_MAX_RUNTIME_IN_MINUTES'])
 
 		if runAndWaitForImport(f,row['SOI_IMPORT_ID'],row['SOI_ACTION'],maxRunTimeInMinutes):
+			Message("successfully imported {filename}".format(filename=f))
+			Message(row['SOI_SFTP_ARCHIVE_FOLDER'])
 			if row['SOI_EXTRA_SFTP_COMMAND'] is not None:
 				extracmd = "sftp."+row['SOI_EXTRA_SFTP_COMMAND'].replace('{filename}',f)
 				print(extracmd)
@@ -215,11 +217,15 @@ for row in Req.jsonData:
 				sftp.remove(row['SOI_SFTP_FOLDER']+f)
 			else:
 				try:
-					sftp.remove(row['SOI_SFTP_ARCHIVE_FOLDER']+f)
+					sftp.rename(row['SOI_SFTP_FOLDER']+f,row['SOI_SFTP_ARCHIVE_FOLDER']+f)
 				except:
-					None
-				sftp.rename(row['SOI_SFTP_FOLDER']+f,row['SOI_SFTP_ARCHIVE_FOLDER']+f)
-				Message("successfully imported {filename}".format(filename=f))
+					Message('Could not rename the file ' + sys.exc_info()[0])
+					Message('Source = {source} Dest = {dest}'.format(source=row['SOI_SFTP_FOLDER']+f, dest=row['SOI_SFTP_ARCHIVE_FOLDER']+f))
+					try:
+						sftp.remove(row['SOI_SFTP_ARCHIVE_FOLDER']+f)
+					except:
+						Message('Could not remove the file')
+	
 			try:
 				os.remove(f)
 			except:
