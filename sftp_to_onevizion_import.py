@@ -115,6 +115,12 @@ def runAndWaitForImport(filename, impspec, action, maxRunTimeInMinutes):
 class MyCnOpts:  #used by sftp connection
 	pass
 
+def error_handling():
+    return 'Error: {}. {}, line: {}'.format(sys.exc_info()[0],
+                                         sys.exc_info()[1],
+                                         sys.exc_info()[2].tb_lineno)
+
+
 #####  Main section
 Req = onevizion.Trackor(trackorType = 'SFTP_TO_OV', URL = OvUrl, userName=OvUserName, password=OvPassword)
 Req.read(filters = {'SOI_ENABLED':'1'}, 
@@ -218,8 +224,8 @@ for row in Req.jsonData:
 			else:
 				try:
 					sftp.rename(row['SOI_SFTP_FOLDER']+f,row['SOI_SFTP_ARCHIVE_FOLDER']+f)
-				except:
-					Message('Could not rename the file ' + sys.exc_info()[0])
+				except Exception as err:
+					Message('Could not rename the file {err}'.format(err))
 					Message('Source = {source} Dest = {dest}'.format(source=row['SOI_SFTP_FOLDER']+f, dest=row['SOI_SFTP_ARCHIVE_FOLDER']+f))
 					try:
 						sftp.remove(row['SOI_SFTP_ARCHIVE_FOLDER']+f)
