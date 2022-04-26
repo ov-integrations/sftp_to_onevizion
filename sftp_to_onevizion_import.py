@@ -63,11 +63,17 @@ def runAndWaitForImport(filename, impspec, action, maxRunTimeInMinutes):
 		userName = OvUserName,
 		password = OvPassword,
 		URL = OvUrl,
-		impSpecId=impspec,
-		file=filename,
-		action=action,
-		comments=filename
+		impSpecId = None,
+		file = None,
+		action = None,
+		comments = None
 		)
+
+	impRun.impSpecId = impspec
+	impRun.file = filename
+	impRun.action = action
+	impRun.comments = filename
+	impRun.run()
 
 	if len(impRun.errors)>0:
 		Message(impRun.errors)
