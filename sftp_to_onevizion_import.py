@@ -14,8 +14,15 @@ from datetime import datetime
 Description="""Import files from SFTP to OV in order
 """
 
+parser = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter)
+parser.add_argument("-v", "--verbose", action='count', default=0, 
+	help="Print extra debug messages and save to a file. Attach file to email if sent.")
+parser.add_argument("-p", "--passwords", metavar="PasswordsFile", 
+	help="JSON file where passwords are stored.", default="settings.json")
+args = parser.parse_args()
+
 # Read settings
-with open('settings.json','r') as p:
+with open(args.passwords,'r') as p:
 	params = json.loads(p.read())
 try:
 	OvUserName = params['OV']['UserName']
@@ -24,10 +31,6 @@ try:
 	SFtpPasswords = params['SFTP']
 except Exception as e:
 	raise "Please check settings by refering to documention in github repository"
-
-parser = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter)
-parser.add_argument("-v", "--verbose", action='count', default=0, help="Print extra debug messages and save to a file. Attach file to email if sent.")
-args = parser.parse_args()
 
 onevizion.Config["Verbosity"]=args.verbose
 Message = onevizion.Message
@@ -159,13 +162,14 @@ for row in Req.jsonData:
 
 		sftp = pysftp.Connection(row['SOI_SFTP_HOST'],
 			username=row['SOI_SFTP_USER_NAME'],
-			password=password,
+			password=password ,
 			cnopts = cnopts
 			)
 	except:
+		Message(error_handling())
 		Trace['SFTP Connect'] = sys.exc_info()[0]
 		Message('could not connect')
-		Message(sys.exc_info())
+		Message(sys.exc_info()[0])
 		quit(1)
 
 	#todo error handling
