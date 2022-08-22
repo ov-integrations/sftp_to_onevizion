@@ -1,3 +1,9 @@
+import sys
+import subprocess
+
+subprocess.check_call([sys.executable, '-m', 'pip', 'install', '-r', 'python_dependencies.txt'])
+
+
 import onevizion
 import argparse
 import pysftp
@@ -6,8 +12,6 @@ import time
 import paramiko
 import base64
 import json
-import sys
-import subprocess
 import os
 from datetime import datetime
 
