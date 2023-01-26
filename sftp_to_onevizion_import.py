@@ -9,7 +9,6 @@ import argparse
 import pysftp
 import re
 import time
-import paramiko
 import base64
 import json
 import os
