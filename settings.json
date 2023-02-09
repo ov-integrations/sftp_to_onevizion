@@ -31,7 +31,8 @@
 			"datefmt" : "%Y%m%d",
 			"impspec" : 100006284,
 			"impname" : "Ring Default Data Import",
-			"action" : "INSERT_UPDATE"
+			"action" : "INSERT_UPDATE",
+            "maxRuntimeInMinutes" : 30
 		}
 		,"site" : {
 			"prefix" : "site_[0-9]*_e2ovsync_202.*",
@@ -40,7 +41,8 @@
 			"datefmt" : "%Y%m%d",
 			"impspec" : 100006285,
 			"impname" : "Site Default Data Import",
-			"action" : "INSERT_UPDATE"
+			"action" : "INSERT_UPDATE",
+            "maxRuntimeInMinutes" : 30
 		},
 		"project" : {
 			"prefix" : "project_[0-9]*_e2ovsync_202.*",
@@ -49,7 +51,8 @@
 			"datefmt" : "%Y%m%d",
 			"impspec" : 100006286,
 			"impname" : "Project Default Data Import",
-			"action" : "INSERT_UPDATE"
+			"action" : "INSERT_UPDATE",
+            "maxRuntimeInMinutes" : 30
 		},
 		"project_tasks_projected" : {
 			"prefix" : "project_tasks_planned_[0-9]*_e2ovsync_202.*",
@@ -58,7 +61,8 @@
 			"datefmt" : "%Y%m%d",
 			"impspec" : 100006304,
 			"impname" : "Assign task Dates to Project Workplan",
-			"action" : "UPDATE"
+			"action" : "UPDATE",
+            "maxRuntimeInMinutes" : 30
 		},
 		"project_tasks_actual" : {
 			"prefix" : "project_tasks_actual_[0-9]*_e2ovsync_202.*",
@@ -67,7 +71,8 @@
 			"datefmt" : "%Y%m%d",
 			"impspec" : 100006304,
 			"impname" : "Assign task Dates to Project Workplan",
-			"action" : "UPDATE"
+			"action" : "UPDATE",
+            "maxRuntimeInMinutes" : 30
 		},
 		"project_tasks_na" : {
 			"prefix" : "project_tasks_na_[0-9]*_e2ovsync_202.*",
@@ -76,7 +81,8 @@
 			"datefmt" : "%Y%m%d",
 			"impspec" : 100006304,
 			"impname" : "Assign task Dates to Project Workplan",
-			"action" : "UPDATE"
+			"action" : "UPDATE",
+            "maxRuntimeInMinutes" : 30
 		}
 	},
 	"IMPORT_ORDER" : [
