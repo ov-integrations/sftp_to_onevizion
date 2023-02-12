@@ -81,7 +81,7 @@ def runAndWaitForImport(filename, impspec, action, max_runtime_in_minutes):
 
 	d = True
 	while d:
-		time.sleep(5)
+		time.sleep(10)
 		process_data = imp.getProcessData(processId=PID)
 		#Message(process_data.jsonData)
 		if len(imp.errors)>0:
