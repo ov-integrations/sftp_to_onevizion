@@ -60,8 +60,9 @@ def sortalist(listOfFileName,params):
 
 
 ###### Run an import and wait for it to complete
-def runAndWaitForImport(filename, impspec, action):
+def runAndWaitForImport(filename, impspec, action, max_runtime_in_minutes):
 	tries = 0
+	max_tries = max_runtime_in_minutes * 60 / 10
 
 	imp = onevizion.Import(
 		userName = website['UserName'],
@@ -80,7 +81,7 @@ def runAndWaitForImport(filename, impspec, action):
 
 	d = True
 	while d:
-		time.sleep(5)
+		time.sleep(10)
 		process_data = imp.getProcessData(processId=PID)
 		#Message(process_data.jsonData)
 		if len(imp.errors)>0:
@@ -91,7 +92,7 @@ def runAndWaitForImport(filename, impspec, action):
 			d = False
 
 		tries = tries + 1
-		if tries>100:
+		if tries>max_tries:
 			#todo error handling
 			return False
 
@@ -151,7 +152,7 @@ for imp in parameters["IMPORT_ORDER"]:
 			Message(sys.exc_info)
 			quit(1) # process files on next fun.  Error on getting file usually because file is still being written to.
 
-		if runAndWaitForImport(f,parameters["IMPORTS"][imp]["impspec"],parameters["IMPORTS"][imp]["action"]):
+		if runAndWaitForImport(f, parameters["IMPORTS"][imp]["impspec"], parameters["IMPORTS"][imp]["action"], parameters["IMPORTS"][imp]["maxRuntimeInMinutes"]):
 			sftp.rename(parameters['SFTP']['Directory']+f,parameters['SFTP']['Directory']+'processed/'+f)
 			Message("successfully imported {filename}".format(filename=f))
 			#quit()
