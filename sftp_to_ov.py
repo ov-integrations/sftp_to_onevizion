@@ -9,6 +9,7 @@ import argparse
 import pysftp
 import re
 import time
+import os
 from datetime import datetime
 
 Description="""Import files from SFTP to OV in order
