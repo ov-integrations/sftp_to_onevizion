@@ -12,6 +12,8 @@ import time
 import os
 from datetime import datetime
 
+PROCESS_FOLDER = 'processed/'
+
 Description="""Import files from SFTP to OV in order
 """
 #EpiLog = onevizion.PasswordExample + """\n\n
@@ -125,8 +127,10 @@ except:
 	quit(1)
 
 
+sftp_directory = parameters['SFTP']['Directory']
+
 # get complete list of files in directory
-with sftp.cd(parameters['SFTP']['Directory']):
+with sftp.cd(sftp_directory):
 	files = sftp.listdir()
 
 #Message(files)
@@ -146,20 +150,23 @@ for imp in parameters["IMPORT_ORDER"]:
 		continue
 
 	for f in filteredFiles:
+		file_path_in_sftp_directory = f'{sftp_directory}{f}'
+		file_path_in_sftp_process_folder = f'{sftp_directory}{PROCESS_FOLDER}{f}'
+
 		Message(f)
 		try:
-			sftp.get(parameters['SFTP']['Directory']+f, preserve_mtime=True)
+			sftp.get(file_path_in_sftp_directory, preserve_mtime=True)
 		except:
 			Message(sys.exc_info)
 			quit(1) # process files on next fun.  Error on getting file usually because file is still being written to.
 
 		if runAndWaitForImport(f, parameters["IMPORTS"][imp]["impspec"], parameters["IMPORTS"][imp]["action"], parameters["IMPORTS"][imp]["maxRuntimeInMinutes"]):
 			try:
-				sftp.remove(parameters['SFTP']['Directory']+'processed/'+f)
+				sftp.remove(file_path_in_sftp_process_folder)
 			except FileNotFoundError:
 				pass
 
-			sftp.rename(parameters['SFTP']['Directory']+f, parameters['SFTP']['Directory']+'processed/'+f)
+			sftp.rename(file_path_in_sftp_directory, file_path_in_sftp_process_folder)
 			Message("successfully imported {filename}".format(filename=f))
 			#quit()
 			continue
