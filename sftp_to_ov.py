@@ -12,7 +12,7 @@ import time
 import os
 from datetime import datetime
 
-PROCESSED_FOLDER_NAME = 'processed/'
+PROCESSED_FOLDER_NAME = 'processed'
 
 Description="""Import files from SFTP to OV in order
 """
@@ -151,7 +151,7 @@ for imp in parameters["IMPORT_ORDER"]:
 
 	for f in filteredFiles:
 		file_path = f'{sftp_directory}{f}'
-		processed_file_path = f'{sftp_directory}{PROCESSED_FOLDER_NAME}{f}'
+		processed_file_path = f'{sftp_directory}{PROCESSED_FOLDER_NAME}/{f}'
 
 		Message(f)
 		try:
