@@ -161,10 +161,8 @@ for imp in parameters["IMPORT_ORDER"]:
 			quit(1) # process files on next fun.  Error on getting file usually because file is still being written to.
 
 		if runAndWaitForImport(f, parameters["IMPORTS"][imp]["impspec"], parameters["IMPORTS"][imp]["action"], parameters["IMPORTS"][imp]["maxRuntimeInMinutes"]):
-			try:
+			if sftp.exists(processed_file_path):
 				sftp.remove(processed_file_path)
-			except FileNotFoundError:
-				pass
 
 			sftp.rename(file_path, processed_file_path)
 			Message("successfully imported {filename}".format(filename=f))
