@@ -9,7 +9,10 @@ import argparse
 import pysftp
 import re
 import time
+import os
 from datetime import datetime
+
+PROCESSED_FOLDER_NAME = 'processed'
 
 Description="""Import files from SFTP to OV in order
 """
@@ -124,8 +127,10 @@ except:
 	quit(1)
 
 
+sftp_directory = parameters['SFTP']['Directory']
+
 # get complete list of files in directory
-with sftp.cd(parameters['SFTP']['Directory']):
+with sftp.cd(sftp_directory):
 	files = sftp.listdir()
 
 #Message(files)
@@ -145,15 +150,21 @@ for imp in parameters["IMPORT_ORDER"]:
 		continue
 
 	for f in filteredFiles:
+		file_path = f'{sftp_directory}{f}'
+		processed_file_path = f'{sftp_directory}{PROCESSED_FOLDER_NAME}/{f}'
+
 		Message(f)
 		try:
-			sftp.get(parameters['SFTP']['Directory']+f, preserve_mtime=True)
+			sftp.get(file_path, preserve_mtime=True)
 		except:
 			Message(sys.exc_info)
 			quit(1) # process files on next fun.  Error on getting file usually because file is still being written to.
 
 		if runAndWaitForImport(f, parameters["IMPORTS"][imp]["impspec"], parameters["IMPORTS"][imp]["action"], parameters["IMPORTS"][imp]["maxRuntimeInMinutes"]):
-			sftp.rename(parameters['SFTP']['Directory']+f,parameters['SFTP']['Directory']+'processed/'+f)
+			if sftp.exists(processed_file_path):
+				sftp.remove(processed_file_path)
+
+			sftp.rename(file_path, processed_file_path)
 			Message("successfully imported {filename}".format(filename=f))
 			#quit()
 			continue
