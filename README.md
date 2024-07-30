@@ -6,7 +6,7 @@ There are 2 implementations and it is your choice which to use.  sftp_to_onevizi
 
 ## sftp_to_onevizion_import.py
 
-This uses a trackor to complete configuration.  Use component import with the file XXX to install the trackor type and it's associated applet.
+This uses a trackor to complete configuration. Use component import with the file components.xml to install the trackor type and it's associated applet.
 
 Example settings file.
 ```json
@@ -49,6 +49,35 @@ Example settings file.
 
 
 Note that SFTP section of the setting file will be where the password is retrieved based on SFTP Host and SFTP User Name.
+
+
+## sftp_to_onevizion_import_mult.py
+
+This uses a trackor to complete configuration.  Use component import with the file components.xml to install the trackor type and it's associated applet.  It uses the same configuration as in the sftp_to_onevizion_import.py section.
+
+This runs multiple imports simultaneously, waits for all of a particular kind to finish (example PO files), then proceeds to the next kind (example PO Line files).  It does this because sometimes a PO Line import is dependant on the PO imports having finished properly.  During the window that the imports are to be processed the internal needs to be smaller than the default such as every 2 or 3 minutes (example below) since it should take many module runs to fully process as it is more of a polling process.
+```
+0/3 0 0 * * ?
+```
+
+Example settings file.  Please note that the MaxImports is dependant on the size (# of CPUs) of your database.
+```json
+{
+	"OV": {
+			"Url": "xxx.onevizion.com",
+			"UserName": "usernameofserviceaccount",
+			"Password": "passwordofserviceaccount",
+			"MaxImports": 3
+	},
+	"SFTP": {
+		"ftp.onevizion.com": {
+			"abc" : "abcpassword",
+			"bbb" : "bbbpassword",
+			"cde" : "cdepassword"
+		}
+	}
+}
+```
 
 
 ## sftp_to_ov.py
@@ -122,5 +151,3 @@ The Table below describes how the IMPORT section would be configued for this exa
 | impspec | ID of the import from the Build Import page | 100006284 |
 | impname | Name of the import from the Build Import page | Ring Default Data Import |
 | action | How to import the data.  Valid choices are INSERT, UPDATE and INSERT_UPDATE | INSERT_UPDATE |
-
-
